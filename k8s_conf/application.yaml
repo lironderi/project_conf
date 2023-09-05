@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/lironderi/project_app
+    repoURL: https://github.com/lironderi/project_conf
     targetRevision: HEAD
     path: dev
   destination:
