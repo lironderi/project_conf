@@ -6,16 +6,16 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/danielsagie/project_conf
+    repoURL: https://github.com/lironderi/project_conf
     targetRevision: HEAD
-    path: k8s_conf
+    path: dev
   destination:
     server: https://kubernetes.default.svc
     namespace: myapp
   
   syncPolicy:
-  #   syncOptions:
-  #   - CreateNameSpace: true
+    syncOptions:
+    - CreateNameSpace=true
 
     automated:
       selfHeal: true
