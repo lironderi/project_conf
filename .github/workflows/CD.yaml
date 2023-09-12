@@ -34,20 +34,9 @@ jobs:
       run: pwd
 
     - name: ls
-      id: ls2
-      run: ls
-
-    - name: move folder
-      id: move_folder
-      run: cd ./eks_conf
-
-    - name: ls
       id: ls
       run: ls
 
-    - name: pwd
-      id: pwd2
-      run: pwd
 
     - name: Terraform Init
       id: init
