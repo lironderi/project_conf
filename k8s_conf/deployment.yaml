@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: market-app
+  namespace: myapp
+  labels:
+    app: market-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: market-app
+  template:
+    metadata:
+      labels:
+        app: market-app
+    spec:
+      containers:
+      - name: market-app
+        image: lironderi/market-app:v1.0.6100584626
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
+        env:
+          - name: MONGO_URI
+            value: "mongodb://mongo-service.myapp.svc.cluster.local:27017/Website_db"
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: myapp
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+            - name: storage
+              mountPath: /data/db
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: mongodb-pvc
+               
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: market-app-service
+  namespace: myapp
+spec:
+  selector:
+    app: market-app
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+  namespace: myapp
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
