@@ -53,7 +53,7 @@ jobs:
     
     - name: Terraform Apply
       id: apply
-      run: terraform apply
+      run: terraform apply -no-color
 
 #   deploy_argo:
 #       name: Deploy argo
