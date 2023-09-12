@@ -34,7 +34,10 @@ jobs:
       id: move_folder
       run: cd eks_conf
 
-      
+    - name: ls
+      id: ls
+      run: pwd  
+
     - name: pwd
       id: pwd2
       run: pwd
