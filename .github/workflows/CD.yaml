@@ -1,4 +1,4 @@
-name: Deploy Infrastructure #e
+name: Deploy Infrastructure 
 
 on:
   push:
@@ -58,6 +58,7 @@ jobs:
 
 
   deploy_argo:
+      needs: deploy_infrastructure
       name: Deploy argo
       runs-on: ubuntu-latest
       defaults:
