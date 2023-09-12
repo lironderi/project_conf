@@ -25,9 +25,19 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         TF_ACTION_WORKING_DIR: "eks_conf"
+
+    - name: pwd
+      id: pwd
+      run: pwd
+
     - name: move folder
       id: move_folder
       run: cd eks_conf
+
+      
+    - name: pwd
+      id: pwd2
+      run: pwd
 
     - name: Terraform Init
       id: init
