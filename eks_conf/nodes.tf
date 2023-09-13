@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonEC2ContainerRegistryReadO
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.nodes.name
 }
-
+#test
 /* resource "aws_iam_policy" "eks_worknode_ebs_policy" {
   name = "Amazon_EBS_CSI_Driver"
 

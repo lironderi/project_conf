@@ -3,5 +3,4 @@
 *.tfstate.*
 .terraform
 *.lock*
-*.github*
-#
+.github
