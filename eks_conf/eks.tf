@@ -1,5 +1,5 @@
 resource "aws_iam_role" "market-app" {
-  name = "eks-cluster-market-app"
+  name = "eks-cluster-market-app" #test
 
   assume_role_policy = <<POLICY
 {
