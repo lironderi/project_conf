@@ -1,5 +1,5 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application #test
+apiVersion: argoproj.io/v1alpha1 #test2
+kind: Application
 metadata:
   name: argo-project
   namespace: argocd
