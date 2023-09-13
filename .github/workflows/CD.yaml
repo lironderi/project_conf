@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-    paths:
+    paths: |
       - eks_conf
       - argo-cd_conf
 
