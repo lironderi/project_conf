@@ -1,5 +1,4 @@
 name: Deploy Infrastructure 
-#test
 on:
   push:
     branches:

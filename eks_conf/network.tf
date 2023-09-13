@@ -13,25 +13,25 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_subnet" "private-us-east-1a" {
+resource "aws_subnet" "project-us-east-1a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.0.0/19"
   availability_zone = "us-east-1a"
 
   tags = {
-    "Name"                                      = "private-us-east-1a"
+    "Name"                                      = "project-us-east-1a"
     "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
 }
 
-resource "aws_subnet" "private-us-east-1b" {
+resource "aws_subnet" "project-us-east-1b" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.32.0/19"
   availability_zone = "us-east-1b"
 
   tags = {
-    "Name"                                      = "private-us-east-1b"
+    "Name"                                      = "project-us-east-1b"
     "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.cluster-name}" = "owned"
   }
@@ -82,7 +82,7 @@ resource "aws_nat_gateway" "nat" {
   depends_on = [aws_internet_gateway.igw]
 }
 
-resource "aws_route_table" "private" {
+resource "aws_route_table" "project" {
   vpc_id = aws_vpc.main.id
 
   route = [
@@ -104,7 +104,7 @@ resource "aws_route_table" "private" {
   ]
 
   tags = {
-    Name = "private"
+    Name = "project"
   }
 }
 
@@ -134,14 +134,14 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_route_table_association" "private-us-east-1a" {
-  subnet_id      = aws_subnet.private-us-east-1a.id
-  route_table_id = aws_route_table.private.id
+resource "aws_route_table_association" "project-us-east-1a" {
+  subnet_id      = aws_subnet.project-us-east-1a.id
+  route_table_id = aws_route_table.project.id
 }
 
-resource "aws_route_table_association" "private-us-east-1b" {
-  subnet_id      = aws_subnet.private-us-east-1b.id
-  route_table_id = aws_route_table.private.id
+resource "aws_route_table_association" "project-us-east-1b" {
+  subnet_id      = aws_subnet.project-us-east-1b.id
+  route_table_id = aws_route_table.project.id
 }
 
 resource "aws_route_table_association" "public-us-east-1a" {
