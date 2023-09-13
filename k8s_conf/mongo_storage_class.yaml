@@ -1,8 +1,10 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: mongodb-storageclass
-  namespace: myapp
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+parameters:
+    type: gp2
+mountOptions:
+  - debug
+volumeBindingMode: Immediate

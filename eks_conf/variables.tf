@@ -9,3 +9,4 @@ variable "create_resource" {
   default     = true
   description = "controls whether the resource should be created"
 }
+

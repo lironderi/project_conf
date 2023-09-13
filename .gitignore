@@ -3,4 +3,4 @@
 *.tfstate.*
 .terraform
 *.lock*
-.github/workflow
+variables2.tf
