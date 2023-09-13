@@ -3,4 +3,3 @@
 *.tfstate.*
 .terraform
 *.lock*
-variables2.tf
