@@ -4,8 +4,8 @@ on:
     branches:
       - master
     paths: 
-      - eks_conf
-      # - argo-cd_conf
+    - eks_conf
+    - argo-cd_conf
 
 env:      
     AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
