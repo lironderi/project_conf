@@ -19,8 +19,11 @@ jobs:
     - name: 
       run : kubectl create namespace myapp       
     - name: Deploy to minikube
-      run:
-        kubectl apply -f deployment_test.yaml mongo_pv_test.yaml mongo_pvc_test.yaml mongo_storageclass_test.yaml
+      run: |
+        kubectl apply -f mongo_pv_test.yaml 
+        kubectl apply -f mongo_pvc_test.yaml 
+        kubectl apply -f mongo_storageclass_test.yaml
+        kubectl apply -f deployment_test.yaml
     - name: Test service URLs
       run: |
         minikube service list
