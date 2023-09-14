@@ -20,6 +20,7 @@ jobs:
       run : kubectl create namespace myapp       
     - name: Deploy to minikube
       run: |
+        ls
         kubectl apply -f ./k8s_test/mongo_pv_test.yaml 
         kubectl apply -f ./k8s_test/mongo_pvc_test.yaml 
         kubectl apply -f ./k8s_test/mongo_storageclass_test.yaml
