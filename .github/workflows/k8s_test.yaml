@@ -23,7 +23,7 @@ jobs:
         cd k8s_test
         kubectl apply -f mongo_pv_test.yaml 
         kubectl apply -f mongo_pvc_test.yaml 
-        kubectl apply -f mongo_storageclass_test.yaml
+        kubectl apply -f mongodb_storageclass_test.yaml
         kubectl apply -f deployment_test.yaml
     - name: Test service URLs
       run: |
