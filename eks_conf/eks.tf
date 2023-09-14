@@ -50,6 +50,6 @@ resource "aws_eks_cluster" "market-app" {
 resource "aws_eks_addon" "addons" {
   cluster_name      = aws_eks_cluster.market-app.name
   addon_name        = "aws-ebs-csi-driver"
-  addon_version     = "v1.11.2-eksbuild.1"
+  addon_version     = "v1.22.0-eksbuild.2"
   resolve_conflicts = "OVERWRITE"
 }
