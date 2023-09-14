@@ -1,0 +1,29 @@
+name: k8s_test
+on:
+   push:
+    branches:
+        - master
+    paths:
+        - k8s_test/**
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    name: build example and deploy to minikube
+    steps:
+    - uses: actions/checkout@v2
+    - name: Start minikube
+      uses: medyagh/setup-minikube@master
+    - name: Try the cluster !
+      run: kubectl get pods -A
+    - name: 
+      run : kubectl create namespace myapp       
+    - name: Deploy to minikube
+      run:
+        kubectl apply -f deployment_test.yaml mongo_pv_test.yaml mongo_pvc_test.yaml mongo_storageclass_test.yaml
+    - name: Test service URLs
+      run: |
+        minikube service list
+        minikube service example --url
+        echo "------------------opening the service------------------"
+        curl $(minikube service example --url)  
