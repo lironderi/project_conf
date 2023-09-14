@@ -78,7 +78,7 @@ resource "aws_eks_node_group" "Market_nodes" {
 
 
   scaling_config {
-    desired_size = 3
+    desired_size = 2
     max_size     = 5
     min_size     = 1
   }
