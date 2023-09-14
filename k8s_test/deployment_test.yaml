@@ -56,7 +56,6 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: mongodb-pvc
-#test
 ---
 apiVersion: v1
 kind: Service
