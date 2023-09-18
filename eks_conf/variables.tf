@@ -10,3 +10,17 @@ variable "create_resource" {
   description = "controls whether the resource should be created"
 }
 
+variable "kube_config" {
+  type    = string
+  default = "~/.kube/config"
+}
+
+variable "namespace_monitoring" {
+  type    = string
+  default = "monitoring"
+}
+
+variable "namespace_myapp" {
+  type    = string
+  default = "myapp"
+}

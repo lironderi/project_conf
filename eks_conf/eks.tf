@@ -53,3 +53,9 @@ resource "aws_eks_addon" "addons" {
   addon_version     = "v1.22.0-eksbuild.2"
   resolve_conflicts = "OVERWRITE"
 }
+
+resource "null_resource" "kubectl" {
+    provisioner "local-exec" {
+        command = "aws eks --region us-east-1 update-kubeconfig --name market-app-cluster"
+    }
+}
