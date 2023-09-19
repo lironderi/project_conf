@@ -48,6 +48,7 @@ resource "aws_eks_cluster" "market-app" {
 }
 
 resource "aws_eks_addon" "addons" {
+  depends_on = [ aws_eks_cluster.market-app ]
   cluster_name      = aws_eks_cluster.market-app.name
   addon_name        = "aws-ebs-csi-driver"
   addon_version     = "v1.22.0-eksbuild.2"
@@ -55,6 +56,7 @@ resource "aws_eks_addon" "addons" {
 }
 
 resource "null_resource" "kubectl" {
+    depends_on = [ aws_eks_cluster.market-app ]
     provisioner "local-exec" {
         command = "aws eks --region us-east-1 update-kubeconfig --name market-app-cluster"
     }

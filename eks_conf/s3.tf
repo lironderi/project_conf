@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "tf-state-bucket" {
-  bucket = "marketapp-project"
+  bucket = "marketapp-project3"
 }
 
 resource "aws_s3_bucket_ownership_controls" "example" {

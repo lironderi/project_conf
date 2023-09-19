@@ -24,3 +24,8 @@ variable "namespace_myapp" {
   type    = string
   default = "myapp"
 }
+
+variable "kube-version" {
+  type = string
+  default = "36.2.0"
+}
