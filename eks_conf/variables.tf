@@ -15,17 +15,7 @@ variable "kube_config" {
   default = "~/.kube/config"
 }
 
-variable "namespace_monitoring" {
-  type    = string
-  default = "monitoring"
-}
-
 variable "namespace_myapp" {
   type    = string
   default = "myapp"
-}
-
-variable "kube-version" {
-  type = string
-  default = "36.2.0"
 }

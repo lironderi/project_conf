@@ -48,7 +48,7 @@ resource "aws_eks_cluster" "market-app" {
 }
 
 resource "aws_eks_addon" "addons" {
-  depends_on = [ aws_eks_cluster.market-app ]
+  depends_on = [ aws_eks_cluster.market-app, aws_eks_node_group.Market_nodes, kubernetes_namespace.myapp, ]
   cluster_name      = aws_eks_cluster.market-app.name
   addon_name        = "aws-ebs-csi-driver"
   addon_version     = "v1.22.0-eksbuild.2"
