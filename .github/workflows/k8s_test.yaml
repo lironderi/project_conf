@@ -27,10 +27,29 @@ jobs:
           kubectl apply -f mongodb_storageclass_test.yaml
           kubectl apply -f deployment_test.yaml
             
-      - name: wait 30 seconds
+      - name: Wait for Pods to be Ready
         run: |
-          sleep 30
-      
+          namespace=myapp
+          retries=30
+          while (( retries > 0 )); do
+            ready_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}' | tr ' ' '\n' | grep "True" | wc -l)
+            total_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].metadata.name}' | tr ' ' '\n' | wc -l)
+            
+            if (( ready_pods == total_pods )); then
+              echo "All pods are ready."
+              break
+             else
+              echo "Waiting for pods to be ready..."
+              sleep 10
+              (( retries-- ))
+            fi
+           done
+            
+           if (( retries == 0 )); then
+              echo "Not all pods became ready in time."
+              exit 1
+           fi
+        
         
       - name: Test service URLs
         run: |
