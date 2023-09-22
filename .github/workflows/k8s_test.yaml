@@ -26,24 +26,10 @@ jobs:
           kubectl apply -f mongo_pvc_test.yaml 
           kubectl apply -f mongodb_storageclass_test.yaml
           kubectl apply -f deployment_test.yaml
-
-      - name: Check for Failed Init Containers
-        run: kubectl get pods -n myapp -o jsonpath='{.items[*].status.initContainerStatuses[*]}'
-        
-      - name: Deploy a Simple Pod
-        run: |
-          kubectl run nginx --image=nginx -n myapp
-          sleep 30 # give it some time to start
-          kubectl get pods -l run=nginx -n myapp
-             
-      - name: Get Events
-        run: kubectl get events -n myapp --sort-by='{.lastTimestamp}'
-
-      - name: Check Volume Status
-        run: kubectl get pvc,pv -n myapp
-      
             
-
+      - name: wait 30 seconds
+        run: |
+          sleep 30
       
         
       - name: Test service URLs
