@@ -27,18 +27,22 @@ jobs:
           kubectl apply -f mongodb_storageclass_test.yaml
           kubectl apply -f deployment_test.yaml
 
-      - name: Test Docker Image Pull
-        run: docker pull lironderi/market-app:v1.0.6100584626
-              
-      - name: Get Network Policies
-        run: kubectl get networkpolicy -n myapp
-     
-      - name: Check Node Resources
-        run: kubectl describe node minikube
-       
-      - name: Get Application Logs
-        run: kubectl logs -l app=market-app -n myapp
+      - name: Check for Failed Init Containers
+        run: kubectl get pods -n myapp -o jsonpath='{.items[*].status.initContainerStatuses[*]}'
+        
+      - name: Deploy a Simple Pod
+        run: |
+          kubectl run nginx --image=nginx -n myapp
+          sleep 30 # give it some time to start
+          kubectl get pods -l run=nginx -n myapp
+             
+      - name: Get Events
+        run: kubectl get events -n myapp --sort-by='{.lastTimestamp}'
+
+      - name: Check Volume Status
+        run: kubectl get pvc,pv -n myapp
       
+            
 
       
         
