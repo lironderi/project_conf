@@ -1,33 +1,36 @@
 name: k8s_test
+
 on:
-   push:
+  push:
     branches:
-        - master
+      - master
     paths:
-        - k8s_test/**
+      - k8s_test/**
 
 jobs:
   job1:
     runs-on: ubuntu-latest
     name: build example and deploy to minikube
     steps:
-    - uses: actions/checkout@v2
-    - name: Start minikube
-      uses: medyagh/setup-minikube@master
-    - name: Try the cluster !
-      run: kubectl get pods -A
-    - name: 
-      run : kubectl create namespace myapp       
-    - name: Deploy to minikube
-      run: |
-        cd k8s_test
-        kubectl apply -f mongo_pv_test.yaml 
-        kubectl apply -f mongo_pvc_test.yaml 
-        kubectl apply -f mongodb_storageclass_test.yaml
-        kubectl apply -f deployment_test.yaml
-    - name: Test service URLs
-      run: |
-        minikube service list
-        minikube service example --url
-        echo "------------------opening the service------------------"
-        curl $(minikube service example -n myapp --url)  
+      - uses: actions/checkout@v2
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+      - name: Try the cluster !
+        run: kubectl get pods -A
+      - name: Create Namespace
+        run: kubectl create namespace myapp       
+      - name: Deploy to minikube
+        run: |
+          cd k8s_test
+          kubectl apply -f mongo_pv_test.yaml 
+          kubectl apply -f mongo_pvc_test.yaml 
+          kubectl apply -f mongodb_storageclass_test.yaml
+          kubectl apply -f deployment_test.yaml
+
+      - name: Test service URLs
+        run: |
+          minikube service list
+          minikube service market-app-service -n myapp --url
+          echo "------------------opening the service------------------"
+          curl $(minikube service market-app-service -n myapp --url)
+  
