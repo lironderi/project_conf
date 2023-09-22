@@ -27,14 +27,24 @@ jobs:
           kubectl apply -f mongodb_storageclass_test.yaml
           kubectl apply -f deployment_test.yaml
 
-      - name: Get Pods Status
-        run: kubectl get pods -n myapp
+      - name: Check Events
+        run: kubectl get events -n myapp
 
-      - name: Describe Pods
-        run: kubectl describe pods -n myapp
+      - name: Describe PVCs
+        run: kubectl describe pvc -n myapp
+      
+      - name: Check PVs
+        run: kubectl get pv
 
-
-
+      - name: Check Storage Classes
+        run: kubectl get sc
+      
+      - name: Check Logs of market-app
+        run: kubectl logs -l app=market-app -n myapp
+      
+      - name: Check Logs of mongodb
+        run: kubectl logs -l app=mongodb -n myapp
+      
       - name: Test service URLs
         run: |
           minikube service list
