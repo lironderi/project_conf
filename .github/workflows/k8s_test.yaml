@@ -27,15 +27,20 @@ jobs:
           kubectl apply -f mongodb_storageclass_test.yaml
           kubectl apply -f deployment_test.yaml
 
-      - name: Describe Pods
-        run: kubectl describe pods -n myapp
-        
-      - name: Describe Nodes
-        run: kubectl describe nodes
+      - name: Test Docker Image Pull
+        run: docker pull lironderi/market-app:v1.0.6100584626
+              
+      - name: Get Network Policies
+        run: kubectl get networkpolicy -n myapp
+     
+      - name: Check Node Resources
+        run: kubectl describe node minikube
+       
+      - name: Get Application Logs
+        run: kubectl logs -l app=market-app -n myapp
+      
 
-      - name: Check Minikube Status
-        run: minikube status
-
+      
         
       - name: Test service URLs
         run: |
