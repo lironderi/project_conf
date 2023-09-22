@@ -27,6 +27,14 @@ jobs:
           kubectl apply -f mongodb_storageclass_test.yaml
           kubectl apply -f deployment_test.yaml
 
+      - name: Get Pods Status
+        run: kubectl get pods -n myapp
+
+      - name: Describe Pods
+        run: kubectl describe pods -n myapp
+
+
+
       - name: Test service URLs
         run: |
           minikube service list
