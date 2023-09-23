@@ -50,8 +50,8 @@ spec:
         ports:
         - containerPort: 27017
         volumeMounts:
-            - name: persistent-storage
-              mountPath: /data/db
+        - name: persistent-storage
+          mountPath: /data/db
       volumes:
       - name: persistent-storage
         persistentVolumeClaim:
