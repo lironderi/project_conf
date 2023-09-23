@@ -50,8 +50,8 @@ spec:
         ports:
         - containerPort: 27017
         volumeMounts:
-        - name: storage
-          mountPath: /data/db
+          - name: storage
+            mountPath: /data/db
       volumes:
       - name: storage
         persistentVolumeClaim:
@@ -83,4 +83,4 @@ spec:
     - protocol: TCP
       port: 27017
       targetPort: 27017
-      #test3
+      #test
