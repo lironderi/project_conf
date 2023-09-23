@@ -50,10 +50,10 @@ spec:
         ports:
         - containerPort: 27017
         volumeMounts:
-            - name: storage
+            - name: persistent-storage
               mountPath: /data/db
       volumes:
-      - name: storage
+      - name: persistent-storage
         persistentVolumeClaim:
           claimName: mongodb-pvc
 --- 
