@@ -30,7 +30,7 @@ jobs:
       - name: Wait for Pods to be Ready
         run: |
           namespace=myapp
-          retries=30
+          retries=10
           while (( retries > 0 )); do
             ready_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}' | tr ' ' '\n' | grep "True" | wc -l)
             total_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].metadata.name}' | tr ' ' '\n' | wc -l)
