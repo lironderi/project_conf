@@ -94,3 +94,4 @@ resource "aws_eks_node_group" "Market_nodes" {
     aws_iam_role_policy_attachment.nodes-AmazonEC2ContainerRegistryReadOnly,
   ]
 }
+#test
