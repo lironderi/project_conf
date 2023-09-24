@@ -56,6 +56,9 @@ jobs:
       run: terraform plan -no-color
       continue-on-error: true
 
+    - name: List files in working directory before Terraform Apply
+      run: ls -la
+
     - name: Terraform Apply
       id: apply
       run: |
@@ -64,9 +67,13 @@ jobs:
           terraform apply -auto-approve && break || sleep 10
         done
 
+    - name: List files in working directory after Terraform Apply
+      run: ls -la
+
     - name: apply ALB
       run: |
         cd ../alb
+        terraform init
         terraform apply -auto-approve
 
 
