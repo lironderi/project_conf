@@ -58,7 +58,18 @@ jobs:
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -auto-approve
+      run: |
+        for i in {1..5}
+        do
+          terraform apply -auto-approve && break || sleep 10
+        done
+
+    - name: apply ALB
+      run: |
+        cd alb
+        terraform apply -auto-approve
+
+
     
     - name: Terraform destroy
       if: always()

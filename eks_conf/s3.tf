@@ -2,17 +2,7 @@ resource "aws_s3_bucket" "tf-state-bucket" {
   bucket = "marketapp-project-daniel"
 }
 
-data "aws_iam_policy_document" "elb_log_policy" {
-  statement {
-    actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.tf-state-bucket.arn}/*"]
 
-    principals {
-      type        = "Service"
-      identifiers = ["elasticloadbalancing.amazonaws.com"]
-    }
-  }
-}
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.tf-state-bucket.id
@@ -65,4 +55,16 @@ data "aws_iam_policy_document" "alb_log_policy" {
 resource "aws_s3_bucket_policy" "alb_log_bucket_policy" {
   bucket = aws_s3_bucket.alb-logs.id
   policy = data.aws_iam_policy_document.alb_log_policy.json
+}
+
+data "aws_iam_policy_document" "elb_log_policy" {
+  statement {
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.tf-state-bucket.arn}/*"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["elasticloadbalancing.amazonaws.com"]
+    }
+  }
 }
