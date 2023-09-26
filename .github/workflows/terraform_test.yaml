@@ -20,6 +20,7 @@ jobs:
           working-directory: "hello"
     env:
       TF_WORKSPACE: staging
+      TF_VAR_hola: "ma nishma motek"
 
     steps:
 
@@ -32,7 +33,6 @@ jobs:
         terraform_version: 1.3.0
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        TF_VAR_hola: "ma nishma motek"
         # TF_ACTION_WORKING_DIR: "eks_conf"
 
     - name: pwd

@@ -61,4 +61,4 @@ resource "null_resource" "kubectl" {
         command = "aws eks --region us-east-1 update-kubeconfig --name market-app-cluster"
     }
 }
- #test
+ #test2
