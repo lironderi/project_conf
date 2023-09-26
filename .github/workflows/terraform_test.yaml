@@ -38,14 +38,15 @@ jobs:
       id: pwd
       run: pwd
 
+
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      
     - name: ls
       id: ls
       run: ls | ls terraform.tfstate.d
-
-
-    # - name: Terraform Init
-    #   id: init
-    #   run: terraform init
       
     # - name: Terraform Validate
     #   id: validate
