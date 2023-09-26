@@ -1,5 +1,4 @@
 name: k8s_test
-
 on:
   push:
     branches:

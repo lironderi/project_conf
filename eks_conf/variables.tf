@@ -1,7 +1,6 @@
 variable "cluster-name" {
   description = "Enter eks cluster name"
   type        = string
-  default     = "market-app-cluster"
 }
 
 variable "create_resource" {
@@ -23,4 +22,8 @@ variable "namespace_myapp" {
 variable "state" {
   type = string
   description = "add state source"
+}
+variable "bucket_name" {
+  type = string
+  description = "bucket name"
 }
