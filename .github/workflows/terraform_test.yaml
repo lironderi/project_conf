@@ -56,33 +56,30 @@ jobs:
       run: terraform plan -no-color
       continue-on-error: true
 
-    - name: List files in working directory before Terraform Apply
-      run: ls -la
 
-    - name: Terraform Apply
-      id: apply
-      run: |
-        for i in {1..5}
-        do
-          terraform apply -auto-approve && break || sleep 10
-        done
 
-    - name: List files in working directory after Terraform Apply
-      run: ls -la
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: |
+    #     for i in {1..5}
+    #     do
+    #       terraform apply -auto-approve && break || sleep 10
+    #     done
 
-    - name: apply ALB
-      run: |
-        cd ../alb
-        terraform init
-        terraform apply -auto-approve
+
+    # - name: apply ALB
+    #   run: |
+    #     cd ../alb
+    #     terraform init
+    #     terraform apply -auto-approve
 
 
     
-    - name: Terraform destroy
-      if: always()
-      id: destroy
-      run: |
-        terraform destroy -auto-approve
+    # - name: Terraform destroy
+    #   if: always()
+    #   id: destroy
+    #   run: |
+    #     terraform destroy -auto-approve
 
 
 
