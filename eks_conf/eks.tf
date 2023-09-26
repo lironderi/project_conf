@@ -58,7 +58,7 @@ resource "aws_eks_addon" "addons" {
 resource "null_resource" "kubectl" {
     depends_on = [ aws_eks_cluster.market-app ]
     provisioner "local-exec" {
-        command = "aws eks --region us-east-1 update-kubeconfig --name ${var.cluster-name}}"
+        command = "aws eks --region us-east-1 update-kubeconfig --name ${var.cluster-name}"
     }
 }
  #test
