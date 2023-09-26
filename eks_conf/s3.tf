@@ -13,4 +13,4 @@ resource "aws_s3_bucket_object" "object" {
   source = var.state
 }
 
-#test
+#test2
