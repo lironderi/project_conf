@@ -17,15 +17,33 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
         run:
-          working-directory: "eks_conf"
+          # working-directory: "eks_conf"
+          working-directory: "hello"
     env:
       TF_WORKSPACE: staging
-      TF_VAR_state: "./terraform.tfstate.d/staging/terraform.tfstate"
+      # TF_VAR_state: "./terraform.tfstate.d/staging/terraform.tfstate"
+      TF_VAR_hola: "ahalan"
 
     steps:
 
     - name: Checkout Repo
       uses: actions/checkout@v3
+    
+      
+
+    - name: setup AWS
+      uses: aws-actions/setup-sam@v2
+      with:
+        use-installer: true
+    - name : configure AWS
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+
+
 
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
