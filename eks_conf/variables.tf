@@ -19,3 +19,8 @@ variable "namespace_myapp" {
   type    = string
   default = "myapp"
 }
+
+variable "state" {
+  type = string
+  description = "add state source"
+}

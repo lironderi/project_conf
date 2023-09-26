@@ -9,3 +9,8 @@ terraform {
 output "hello_world" {
   value = "Hello, World!"
 }
+
+output "hola" {
+  value = var.hola
+
+}
