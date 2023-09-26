@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
         run:
-          # working-directory: "eks_conf"
           working-directory: "hello"
     env:
       TF_WORKSPACE: staging
@@ -54,20 +53,20 @@ jobs:
     #   id: validate
     #   run: terraform validate -no-color
       
-    # - name: Terraform Plan
-    #   id: plan
-    #   run: terraform plan -no-color
-    #   continue-on-error: true
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color
+      continue-on-error: true
 
 
 
-    - name: Terraform Apply
-      id: apply
-      run: |
-        for i in {1..5}
-        do
-          terraform apply -auto-approve && break || sleep 10
-        done
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: |
+    #     for i in {1..5}
+    #     do
+    #       terraform apply -auto-approve && break || sleep 10
+    #     done
 
     - name: ls
       id: ls2
