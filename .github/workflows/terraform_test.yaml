@@ -47,8 +47,7 @@ jobs:
     - name: ls
       id: ls
       run: |
-         ls 
-         ls -R terraform.tfstate.d
+         ls -lR 
       
     # - name: Terraform Validate
     #   id: validate
