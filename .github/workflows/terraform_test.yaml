@@ -102,7 +102,18 @@ jobs:
       
     - name: Checkout Repo
       uses: actions/checkout@v3
-          
+
+    - name: setup AWS
+      uses: aws-actions/setup-sam@v2
+      with:
+        use-installer: true
+    - name : configure AWS
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
     - name: retrieve state
       uses: keithweaver/aws-s3-github-action@v1.0.0
       with:
@@ -113,7 +124,11 @@ jobs:
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws_region: us-east-1
         flags: --delete
-      
+   
+    - name:
+      run: |
+        aws s3api delete-bucket --market-app-cluster-prod-liron --region us-east-1
+    
       
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
