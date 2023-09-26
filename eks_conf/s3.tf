@@ -12,3 +12,5 @@ resource "aws_s3_bucket_object" "object" {
   bucket = aws_s3_bucket.tf-state-bucket[0].id
   source = var.state
 }
+
+#test
