@@ -54,26 +54,21 @@ jobs:
       id: validate
       run: terraform validate -no-color
       
-    - name: Terraform Plan
-      id: plan
-      run: |
-        terraform plan -no-color
-      continue-on-error: true
+    # - name: Terraform Plan
+    #   id: plan
+    #   run: |
+    #     terraform plan -no-color
+    #   continue-on-error: true
 
     
 
-    # - name: Terraform Apply
-    #   id: apply
-    #   run: |
-    #     for i in {1..5}
-    #     do
-    #       terraform apply -auto-approve && break || sleep 10
-    #     done
-
-    - name: ls
-      id: ls2
+    - name: Terraform Apply
+      id: apply
       run: |
-         ls -lR 
+        for i in {1..5}
+        do
+          terraform apply -auto-approve && break || sleep 10
+        done
 
 
     # - name: apply ALB
@@ -84,11 +79,11 @@ jobs:
 
 
     
-    # - name: Terraform destroy
-    #   if: always()
-    #   id: destroy
-    #   run: |
-    #     terraform destroy -auto-approve
+    - name: Terraform destroy
+      if: always()
+      id: destroy
+      run: |
+        terraform destroy -auto-approve
 
 
 
