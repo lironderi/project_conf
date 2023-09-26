@@ -60,10 +60,10 @@ jobs:
       id: init
       run: terraform init
       
-    - name: ls
-      id: ls
-      run: |
-         ls -lR 
+    # - name: ls
+    #   id: ls
+    #   run: |
+    #      ls -lR 
       
     - name: Terraform Validate
       id: validate
