@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
         run:
-          working-directory: "eks_conf"
+          # working-directory: "eks_conf"
+          working-directory: "hello"
     env:
       TF_WORKSPACE: staging
 
@@ -60,13 +61,18 @@ jobs:
 
 
 
-    # - name: Terraform Apply
-    #   id: apply
-    #   run: |
-    #     for i in {1..5}
-    #     do
-    #       terraform apply -auto-approve && break || sleep 10
-    #     done
+    - name: Terraform Apply
+      id: apply
+      run: |
+        for i in {1..5}
+        do
+          terraform apply -auto-approve && break || sleep 10
+        done
+
+    - name: ls
+      id: ls2
+      run: |
+         ls -lR 
 
 
     # - name: apply ALB
