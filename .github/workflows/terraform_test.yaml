@@ -99,7 +99,7 @@ jobs:
     env:
       TF_WORKSPACE: production
       TF_VAR_bucket_name: "market-app-bucket-prod-liron"
-      TF_VAR_state: "./data/terraform.tfstate"
+      TF_VAR_state: "./terraform.tfstate"
       TF_VAR_cluster-name: "market-app-cluster-prod-liron"
       
     steps:
@@ -118,20 +118,12 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
     
-    - name: retrieve state
-      uses: keithweaver/aws-s3-github-action@v1.0.0
-      with:
-        command: sync
-        source: "market-app-bucket-stagging-liron"
-        destination: ./data/
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: us-east-1
-        flags: --delete
-   
-    - name:
+    - name: pull state
       run: |
-        aws s3api delete-bucket --market-app-cluster-prod-liron --region us-east-1
+        aws s3api get-object --bucket market-app-bucket-prod-liron --key terraform.tfstate
+   
+    - name: ls
+      run: ls -a
     
       
     - name: Terraform Setup
