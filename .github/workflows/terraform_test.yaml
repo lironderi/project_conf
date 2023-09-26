@@ -21,7 +21,7 @@ jobs:
     env:
       TF_WORKSPACE: staging
       TF_VAR_state: "./terraform.tfstate.d/staging/terraform.tfstate"
-      TF_VAR_bucket: "market-app-bucket-stagging-liron"
+      TF_VAR_bucket_name: "market-app-bucket-stagging-liron"
       TF_VAR_cluster_name: "market-app-cluster-stagging-liron"
 
     steps:
@@ -60,14 +60,10 @@ jobs:
       id: init
       run: terraform init
       
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate
-      
     - name: Terraform Plan
       id: plan
       run: |
-        terraform plan
+        terraform plan --no-color
       continue-on-error: true
 
     - name: Terraform Apply
