@@ -48,10 +48,14 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         # TF_ACTION_WORKING_DIR: "eks_conf"
 
-    - name: pwd
-      id: pwd
-      run: pwd
-
+    - name: create producrion bucket
+      run: |
+        bucket_name="market-app-bucket-prod-liron"
+        if ! aws s3api head-bucket --bucket "$bucket_name"; then
+          aws s3 mb s3://"$bucket_name"
+        fi
+      continue-on-error: true
+    
     - name: Terraform Init
       id: init
       run: terraform init
@@ -79,6 +83,17 @@ jobs:
           terraform apply -auto-approve && break || sleep 10
         done
 
+    - name: Sync state from Staging to Production
+      run: |
+        aws s3 sync s3://market-app-bucket-stagging-liron/ s3://market-app-bucket-prod-liron/
+    
+    - name: Terraform destroy
+      id: destroy
+      run: |
+        terraform destroy -auto-approve 
+
+
+
   production:
     needs: stagging
     name: Deploy Infrastructure
@@ -97,12 +112,6 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
           
-            
-      
-    # - name: setup AWS
-    #   uses: aws-actions/setup-sam@v2
-    #   with:
-    #     use-installer: true
     - name: retrieve state
       uses: keithweaver/aws-s3-github-action@v1.0.0
       with:
@@ -121,12 +130,6 @@ jobs:
         terraform_version: 1.3.0
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      
-    - name: pwd
-      id: pwd
-      run: pwd
-      
-      
       
     - name: Terraform Init
       id: init
@@ -154,60 +157,6 @@ jobs:
         do
           terraform apply -auto-approve && break || sleep 10
         done
-      
-      
-          
-    # - name: Terraform destroy
-    #   if: always()
-    #   id: destroy
-    #   run: |
-    #     terraform destroy -auto-approve
-
-
-    
-  destroy_stagging:
-    name: destroy staging
-    runs_on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "eks_conf"
-    env:
-      TF_WORKSPACE: staging
-      TF_VAR_state: "./terraform.tfstate.d/staging/terraform.tfstate"
-      TF_VAR_bucket: "market-app-bucket-stagging-liron"
-      TF_VAR_cluster_name: "market-app-cluster-stagging-liron"
-      
-    steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v3
-          
-    - name: setup AWS
-      uses: aws-actions/setup-sam@v2
-      with:
-        use-installer: true
-
-    - name : configure AWS
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-        
-    - name: Terraform Setup
-      uses: hashicorp/setup-terraform@v2
-      with:
-          terraform_version: 1.3.0
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-    
-    # - name: Terraform destroy
-    #   if: always()
-    #   id: destroy
-    #   run: |
-    #     terraform destroy -auto-approve
-
-
 
 
   # deploy_argo:
