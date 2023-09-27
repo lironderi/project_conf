@@ -6,6 +6,7 @@ on:
     paths: 
     - eks_conf/**
     - argo-cd_conf/**
+    - test_destroy/**
 
 env:      
     AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
