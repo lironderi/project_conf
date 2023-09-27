@@ -90,7 +90,7 @@ jobs:
 
 
   production:
-    # needs: stagging
+    needs: stagging
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
     defaults:
