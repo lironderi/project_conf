@@ -10,4 +10,3 @@ variable "kube-version" {
   type = string
   default = "36.2.0"
 }
-#test 1
