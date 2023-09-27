@@ -124,8 +124,8 @@ jobs:
 
     - name: change bucket name
       run: |
-        aws s3 cp s3://market-app-bucket-prod-liron/counter.txt - >> /dev/null
-        if [ $? -ne 0 ]; then
+        exist=$(aws s3 cp s3://market-app-bucket-prod-liron/counter.txt - >> /dev/null)
+        if [ exist -ne 0 ]; then
         touch counter.txt && echo "0" > counter.txt && aws cp counter.txt s3://market-app-bucket-prod-liron/
         else
         counter=aws s3 cp s3://market-app-bucket-prod-liron/counter.txt
