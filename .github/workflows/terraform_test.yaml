@@ -76,11 +76,11 @@ jobs:
 
     - name: Sync state from Staging to Production
       run: |
-        aws s3 sync s3://market-app-bucket-staging-liron/ s3://market-app-bucket-prod-liron/
+        aws s3 sync s3://${{ vars.STAGING_BUCKET_NAME }}/ s3://${{ vars.PROD_BUCKET_NAME }}/
     
     - name: cleaning staging bucket
       run: |
-        aws s3 rm s3://market-app-bucket-staging-liron --recursive
+        aws s3 rm s3://${{ vars.STAGING_BUCKET_NAME }} --recursive
     
     - name: Terraform destroy staging
       id: destroy
@@ -120,7 +120,7 @@ jobs:
     
   #   - name: pull state
   #     run: |
-  #       aws s3 cp s3://market-app-bucket-prod-liron/terraform.tfstate .
+  #       aws s3 cp s3://${{ vars.PROD_BUCKET_NAME }}/terraform.tfstate .
       
   #   - name: Terraform Setup
   #     uses: hashicorp/setup-terraform@v2
@@ -175,11 +175,11 @@ jobs:
 
       - name: check_argo_file 
         run: |
-          $GITHUB_OUTPUT=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep counter.txt)
-          echo $GITHUB_OUTPUT
-      - name: echo
-        if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
-        run: echo "oved"
+          exist=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt)
+          if [ -z "$exist" ]; then echo "oved"
+      # - name: echo
+      #   if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
+      #   run: echo "oved"
           
 
       
