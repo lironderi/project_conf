@@ -175,7 +175,7 @@ jobs:
 
       - name: check_argo_file 
         run: |
-          aws s3 ls s3://market-app-bucket-prod-liron/ | grep counter.txt >> $GITHUB_OUTPUT
+          $GITHUB_OUTPUT=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep counter.txt)
           echo $GITHUB_OUTPUT
       - name: echo
         if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
