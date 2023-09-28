@@ -176,9 +176,9 @@ jobs:
       - name: check_argo_file 
         run: |
           exist=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt || echo "0")
-          if [ $exist -eq 0 ]; then echo "oved"
+          if [ $exist -eq 0 ]; then echo "oved"; fi
       # - name: echo
-      #   if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
+        # if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
       #   run: echo "oved"
           
 
