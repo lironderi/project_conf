@@ -13,7 +13,7 @@ env:
     AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  stagging:
+  staging:
     name: test Infrastructure
     runs-on: ubuntu-latest
     defaults:
@@ -89,74 +89,67 @@ jobs:
 
 
 
-  production:
-    needs: stagging
-    name: Deploy Infrastructure
-    runs-on: ubuntu-latest
-    defaults:
-        run:
-          working-directory: "test"
-    env:
-      TF_WORKSPACE: production
-      TF_VAR_bucket_name: "market-app-bucket-prod-liron"
-      TF_VAR_state: "./terraform.tfstate"
-      TF_VAR_cluster-name: "market-app-cluster-prod-liron"
+  # production:
+  #   needs: staging
+  #   name: Deploy Infrastructure
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #       run:
+  #         working-directory: "test"
+  #   env:
+  #     TF_WORKSPACE: production
+  #     TF_VAR_bucket_name: "market-app-bucket-prod-liron"
+  #     TF_VAR_state: "./terraform.tfstate"
+  #     TF_VAR_cluster-name: "market-app-cluster-prod-liron"
       
-    steps:
+  #   steps:
       
-    - name: Checkout Repo
-      uses: actions/checkout@v3
+  #   - name: Checkout Repo
+  #     uses: actions/checkout@v3
 
-    - name: setup AWS
-      uses: aws-actions/setup-sam@v2
-      with:
-        use-installer: true
-    - name : configure AWS
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+  #   - name: setup AWS
+  #     uses: aws-actions/setup-sam@v2
+  #     with:
+  #       use-installer: true
+  #   - name : configure AWS
+  #     uses: aws-actions/configure-aws-credentials@v2
+  #     with:
+  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       aws-region: us-east-1
     
-    - name: pull state
-      run: |
-        aws s3 cp s3://market-app-bucket-prod-liron/terraform.tfstate .
-
-    # - name: change bucket name
-    #   run: |
-    #     chmod +x ./bucket.sh
-    #     counter=$(./bucket.sh)
-    #   env:
-    #     TF_VAR_bucket_name: "market-app-bucket-prod-liron[${counter}]"
+  #   - name: pull state
+  #     run: |
+  #       aws s3 cp s3://market-app-bucket-prod-liron/terraform.tfstate .
       
-    - name: Terraform Setup
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.3.0
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  #   - name: Terraform Setup
+  #     uses: hashicorp/setup-terraform@v2
+  #     with:
+  #       terraform_version: 1.3.0
+  #     env:
+  #       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       
-    - name: Terraform Init production
-      id: init
-      run: terraform init
+  #   - name: Terraform Init production
+  #     id: init
+  #     run: terraform init
             
-    - name: Terraform Plan production
-      id: plan
-      run: |
-        terraform plan -no-color
-      continue-on-error: true
+  #   - name: Terraform Plan production
+  #     id: plan
+  #     run: |
+  #       terraform plan -no-color
+  #     continue-on-error: true
       
-    - name: Terraform Apply production
-      id: apply
-      run: |
-        for i in {1..5}
-        do
-          terraform apply -auto-approve && break || sleep 10
-        done
+  #   - name: Terraform Apply production
+  #     id: apply
+  #     run: |
+  #       for i in {1..5}
+  #       do
+  #         terraform apply -auto-approve && break || sleep 10
+  #       done
 
 
   deploy_argo:
-      needs: production
+      needs: staging
       name: Deploy argo
       runs-on: ubuntu-latest
       defaults:
@@ -180,12 +173,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: check argo file 
+      - name: check_argo_file 
         run: |
-          ${{ env.ARFO_FILE }}=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt)
+          $(aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt) >> $GITHUB_OUTPUT
       
       - name: echo
-        if: ${{ env.ARGO_FILE == '' }}
+        if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
         run: echo "oved"
           
 
