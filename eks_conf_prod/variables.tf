@@ -26,4 +26,5 @@ variable "state" {
 variable "bucket_name" {
   type = string
   description = "bucket name"
+  default = "market-app-bucket-prod-liron"
 }
