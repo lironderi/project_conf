@@ -9,4 +9,4 @@ echo $counter > counter.txt
 aws s3 sync ./counter.txt s3://market-app-bucket-prod-liron/counter.txt
 fi
 echo $counter
-#test7
+#test8
