@@ -22,8 +22,8 @@ jobs:
     env:
       TF_WORKSPACE: staging
       TF_VAR_state: "./terraform.tfstate.d/staging/terraform.tfstate"
-      TF_VAR_bucket_name: "market-app-bucket-staging-liron"
-      TF_VAR_cluster-name: "market-app-cluster-stagging-liron"
+      TF_VAR_bucket_name: ${{ vars.STAGING_BUCKET_NAME }}
+      TF_VAR_cluster-name: ${{ vars.STAGING_CLUSTER_NAME}}
 
     steps:
 
@@ -98,9 +98,9 @@ jobs:
   #         working-directory: "test"
   #   env:
   #     TF_WORKSPACE: production
-  #     TF_VAR_bucket_name: "market-app-bucket-prod-liron"
   #     TF_VAR_state: "./terraform.tfstate"
-  #     TF_VAR_cluster-name: "market-app-cluster-prod-liron"
+  #     TF_VAR_bucket_name: ${{ vars.PROD_BUCKET_NAME }}
+  #     TF_VAR_cluster-name: ${{ vars.PROD_CLUSTER_NAME }}
       
   #   steps:
       
@@ -175,7 +175,7 @@ jobs:
 
       - name: check_argo_file 
         run: |
-          aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt >> $GITHUB_OUTPUT
+          aws s3 ls s3://market-app-bucket-prod-liron/ | grep counter.txt >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
       - name: echo
         if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
