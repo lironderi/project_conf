@@ -166,6 +166,9 @@ jobs:
         ARGO_FILE: "0"
       steps:
       
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      
       - name: setup AWS
         uses: aws-actions/setup-sam@v2
         with:
@@ -179,15 +182,14 @@ jobs:
 
       - name: check argo file 
         run: |
-          $ARFO_FILE=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt)
+          ${{ env.ARFO_FILE }}=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt)
       
       - name: echo
         if: ${{ env.ARGO_FILE == '' }}
         run: echo "oved"
           
 
-      # - name: Checkout Repo
-      #   uses: actions/checkout@v3
+      
 
       # - name: Terraform Setup
       #   uses: hashicorp/setup-terraform@v2
