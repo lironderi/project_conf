@@ -122,12 +122,12 @@ jobs:
       run: |
         aws s3 cp s3://market-app-bucket-prod-liron/terraform.tfstate .
 
-    - name: change bucket name
-      run: |
-        chmod +x ./bucket.sh
-        counter=$(./bucket.sh)
-      env:
-        TF_VAR_bucket_name: "market-app-bucket-prod-liron[${counter}]"
+    # - name: change bucket name
+    #   run: |
+    #     chmod +x ./bucket.sh
+    #     counter=$(./bucket.sh)
+    #   env:
+    #     TF_VAR_bucket_name: "market-app-bucket-prod-liron[${counter}]"
       
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
