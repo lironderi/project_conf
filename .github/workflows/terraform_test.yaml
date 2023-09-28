@@ -175,8 +175,8 @@ jobs:
 
       - name: check_argo_file 
         run: |
-          $(aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt) >> $GITHUB_OUTPUT
-      
+          aws s3 ls s3://market-app-bucket-prod-liron/ | grep argo.txt >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
       - name: echo
         if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
         run: echo "oved"
