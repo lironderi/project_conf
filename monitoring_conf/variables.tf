@@ -10,3 +10,6 @@ variable "kube-version" {
   type = string
   default = "36.2.0"
 }
+variable "cluster-name" {
+  type = string
+}

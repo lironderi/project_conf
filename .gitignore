@@ -3,3 +3,5 @@
 *.tfstate.*
 .terraform
 *.lock*
+k8s_test.yaml
+terraform_test.yaml

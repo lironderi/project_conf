@@ -6,7 +6,6 @@ on:
     paths: 
     - eks_conf/**
     - argo-cd_conf/**
-    - test/**
 
 env:      
     AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -18,12 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
         run:
-          working-directory: "test"
+          working-directory: "eks_conf"
     env:
       TF_WORKSPACE: staging
       TF_VAR_state: "./terraform.tfstate.d/staging/terraform.tfstate"
-      TF_VAR_bucket_name: ${{ vars.STAGING_BUCKET_NAME }}
-      TF_VAR_cluster-name: ${{ vars.STAGING_CLUSTER_NAME}}
+      TF_VAR_bucket_name: ${{vars.STAGING_BUCKET_NAME}}
+      TF_VAR_cluster-name: ${{vars.STAGING_CLUSTER_NAME}}
 
     steps:
 
@@ -47,26 +46,27 @@ jobs:
         terraform_version: 1.3.0
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        # TF_ACTION_WORKING_DIR: "eks_conf"
 
     - name: create producrion bucket
       run: |
-        bucket_name="market-app-bucket-prod-liron"
+        bucket_name=${{vars.PROD_BUCKET_NAME}}
         if ! aws s3api head-bucket --bucket "$bucket_name"; then
           aws s3 mb s3://"$bucket_name"
         fi
       continue-on-error: true
     
-    - name: Terraform Init staging
+    - name: Terraform Init
       id: init
       run: terraform init
       
-    - name: Terraform Plan staging
+    - name: Terraform Plan
       id: plan
       run: |
         terraform plan --no-color
       continue-on-error: true
 
-    - name: Terraform Apply staging
+    - name: Terraform Apply
       id: apply
       run: |
         for i in {1..5}
@@ -76,92 +76,93 @@ jobs:
 
     - name: Sync state from Staging to Production
       run: |
-        aws s3 sync s3://${{ vars.STAGING_BUCKET_NAME }}/ s3://${{ vars.PROD_BUCKET_NAME }}/
+        aws s3 sync s3://${{vars.STAGING_BUCKET_NAME}}/ s3://${{vars.PROD_BUCKET_NAME}}/
     
-    - name: cleaning staging bucket
+    - name: cleaning bucket
       run: |
-        aws s3 rm s3://${{ vars.STAGING_BUCKET_NAME }} --recursive
+        aws s3 rm s3://${{vars.STAGING_BUCKET_NAME}} --recursive
     
-    - name: Terraform destroy staging
+    - name: Terraform destroy
       id: destroy
       run: |
         terraform destroy -auto-approve 
 
 
 
-  # production:
-  #   needs: staging
-  #   name: Deploy Infrastructure
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #       run:
-  #         working-directory: "test"
-  #   env:
-  #     TF_WORKSPACE: production
-  #     TF_VAR_state: "./terraform.tfstate"
-  #     TF_VAR_bucket_name: ${{ vars.PROD_BUCKET_NAME }}
-  #     TF_VAR_cluster-name: ${{ vars.PROD_CLUSTER_NAME }}
+  production:
+    needs: staging
+    name: Deploy Infrastructure
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+          working-directory: "eks_conf"
+    env:
+      TF_WORKSPACE: production
+      TF_VAR_bucket_name: ${{vars.PROD_BUCKET_NAME}}
+      TF_VAR_state: "./terraform.tfstate"
+      TF_VAR_cluster-name: ${{vars.PROD_CLUSTER_NAME}}
       
-  #   steps:
+    steps:
       
-  #   - name: Checkout Repo
-  #     uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
 
-  #   - name: setup AWS
-  #     uses: aws-actions/setup-sam@v2
-  #     with:
-  #       use-installer: true
-  #   - name : configure AWS
-  #     uses: aws-actions/configure-aws-credentials@v2
-  #     with:
-  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       aws-region: us-east-1
+    - name: setup AWS
+      uses: aws-actions/setup-sam@v2
+      with:
+        use-installer: true
+    - name : configure AWS
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
     
-  #   - name: pull state
-  #     run: |
-  #       aws s3 cp s3://${{ vars.PROD_BUCKET_NAME }}/terraform.tfstate .
       
-  #   - name: Terraform Setup
-  #     uses: hashicorp/setup-terraform@v2
-  #     with:
-  #       terraform_version: 1.3.0
-  #     env:
-  #       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.3.0
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
       
-  #   - name: Terraform Init production
-  #     id: init
-  #     run: terraform init
+    - name: Terraform Init
+      id: init
+      run: terraform init
             
-  #   - name: Terraform Plan production
-  #     id: plan
-  #     run: |
-  #       terraform plan -no-color
-  #     continue-on-error: true
+    - name: pull state
+      run: |
+        aws s3 cp s3://${{vars.PROD_BUCKET_NAME}}/terraform.tfstate .
       
-  #   - name: Terraform Apply production
-  #     id: apply
-  #     run: |
-  #       for i in {1..5}
-  #       do
-  #         terraform apply -auto-approve && break || sleep 10
-  #       done
+    - name: Terraform Apply
+      id: apply
+      run: |
+        for i in {1..5}
+        do
+          terraform apply -auto-approve && break || sleep 10
+        done
+
+   
 
 
   deploy_argo:
-      needs: staging
+      needs: production
       name: Deploy argo
       runs-on: ubuntu-latest
       defaults:
         run:
           working-directory: "argo-cd_conf"
       env:
-        ARGO_FILE: "0"
+        TF_WORKSPACE: production
+        TF_VAR_bucket_name: ${{vars.PROD_BUCKET_NAME}}
+        TF_VAR_state:  "./terraform.tfstate.d/production/terraform.tfstate"
+        TF_VAR_cluster-name: ${{vars.PROD_CLUSTER_NAME}}
       steps:
-      
+
       - name: Checkout Repo
         uses: actions/checkout@v3
-      
+
       - name: setup AWS
         uses: aws-actions/setup-sam@v2
         with:
@@ -173,35 +174,123 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: check_argo_file 
+      - name: Check if Argo CD is installed
+        id: check_argo
         run: |
-          exist=$(aws s3 ls s3://market-app-bucket-prod-liron/ | grep counter.txt || echo "0")
-          if [ $exist -eq 0 ]; then echo "oved"; else echo exist=1 fi
-          echo "$exist"
-      # - name: echo
-        # if:  (steps.check_argo_file.GITHUB_OUTPUT == '') 
-      #   run: echo "oved"
-          
+          EXISTS=$(aws s3 ls s3://${{vars.PROD_BUCKET_NAME}}/argo-cd.tfstate --region us-east-1 || true)
+          if [[ -z "$EXISTS" ]]; then
+            echo "::set-output name=exists::false"
+          else
+            echo "::set-output name=exists::true"
+          fi
 
+
+      - name: Terraform Setup
+        if: steps.check_argo.outputs.exists == 'false'
+        uses: hashicorp/setup-terraform@v2
+        with:
+            terraform_version: 1.3.0
+        env:
+            GH_TOKEN: ${{ secrets.GH_TOKEN }}
+                
+      - name: Terraform Init
+        if: steps.check_argo.outputs.exists == 'false'
+        id: init
+        run: terraform init
+    
+      
+      - name: Terraform Apply
+        if: steps.check_argo.outputs.exists == 'false'          
+        id: apply
+        run: |
+              for i in {1..5}
+              do
+                terraform apply -auto-approve && break || sleep 1
+              done
+
+      - name: ls
+        if: steps.check_argo.outputs.exists == 'false'  
+        run: ls -aR    
+    
+      - name: rename state
+        if: steps.check_argo.outputs.exists == 'false'
+        id: rename
+        run: mv ./terraform.tfstate.d/production/terraform.tfstate ./terraform.tfstate.d/production/argo-cd.tfstate
+      
+      - name: Copy Argo CD State File to S3 Bucket
+        if: steps.check_argo.outputs.exists == 'false'
+        run: |
+          aws s3 cp ./terraform.tfstate.d/production/argo-cd.tfstate s3://${{vars.PROD_BUCKET_NAME}}/argo-cd.tfstate
       
 
-      # - name: Terraform Setup
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #       terraform_version: 1.3.0
-      #   env:
-      #       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        
+  monitoring:
+      needs: deploy_argo
+      name: monitoring
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: "monitoring_conf"
+      env:
+        TF_WORKSPACE: production
+        TF_VAR_bucket_name: ${{vars.PROD_BUCKET_NAME}}
+        TF_VAR_state:  "./terraform.tfstate.d/production/terraform.tfstate"
+        TF_VAR_cluster-name: ${{vars.PROD_CLUSTER_NAME}}
+      steps:
+
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: setup AWS
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+      - name : configure AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Check if monitoring is installed
+        id: check_monitoring
+        run: |
+          EXISTS=$(aws s3 ls s3://${{vars.PROD_BUCKET_NAME}}/monitoring.tfstate --region us-east-1 || true)
+          if [[ -z "$EXISTS" ]]; then
+            echo "::set-output name=exists::false"
+          else
+            echo "::set-output name=exists::true"
+          fi
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+            terraform_version: 1.3.0
+        env:
+            GH_TOKEN: ${{ secrets.GH_TOKEN }}
                 
-      # - name: Terraform Init
-      #   id: init
-      #   run: terraform init
         
-        
-      # - name: Terraform Validate
-      #   id: validate
-      #   run: terraform validate -no-color
-        
-      # - name: Terraform Plan
-      #   id: plan
-      #   run: terraform plan -no-color
-      #   continue-on-error: true
+      - name: Terraform Init
+        if: steps.check_monitoring.outputs.exists == 'false'
+        id: init
+        run: terraform init
+    
+
+      
+      - name: Terraform Apply
+        if: steps.check_monitoring.outputs.exists == 'false'          
+        id: apply
+        run: |
+              for i in {1..5}
+              do
+                terraform apply -auto-approve && break || sleep 1
+              done
+          
+      - name: rename state
+        if: steps.check_monitoring.outputs.exists == 'false'
+        id: rename
+        run: mv ./terraform.tfstate.d/production/terraform.tfstate ./terraform.tfstate.d/production/monitoring.tfstate
+      
+      - name: Copy monitoring State File to S3 Bucket
+        if: steps.check_monitoring.outputs.exists == 'false'
+        run: |
+          aws s3 cp ./terraform.tfstate.d/production/monitoring.tfstate s3://${{vars.PROD_BUCKET_NAME}}/monitoring.tfstate
