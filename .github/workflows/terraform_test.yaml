@@ -72,9 +72,9 @@ jobs:
     #   run: |
     #     aws s3 sync s3://${{vars.STAGING_BUCKET_NAME}}/ s3://${{vars.PROD_BUCKET_NAME}}/
     
-    - name: cleaning bucket
-      run: |
-        aws s3 rm s3://${{vars.STAGING_BUCKET_NAME}} --recursive
+    # - name: cleaning bucket
+    #   run: |
+    #     aws s3 rm s3://${{vars.STAGING_BUCKET_NAME}} --recursive
 
     - name: Terraform destroy
       id: destroy
