@@ -99,7 +99,7 @@ jobs:
     env:
       TF_WORKSPACE: production
       TF_VAR_bucket_name: ${{vars.PROD_BUCKET_NAME}}
-      TF_VAR_state: "./env/production/terraform.tfstate"
+      TF_VAR_state: ".terraform.tfstate"
       
     steps:
       
@@ -127,7 +127,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
     - name: Copy Staging State File
-      run: aws s3 cp s3://${{vars.PROD_BUCKET_NAME}}/env/staging/terraform.tfstate ./env/production/
+      run: aws s3 cp s3://${{vars.PROD_BUCKET_NAME}}/env:/staging/terraform.tfstate .
       
     - name: Terraform Init
       id: init
