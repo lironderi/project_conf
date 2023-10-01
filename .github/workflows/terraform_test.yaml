@@ -100,6 +100,7 @@ jobs:
       # TF_WORKSPACE: production
       TF_VAR_bucket_name: ${{vars.PROD_BUCKET_NAME}}
       TF_VAR_state: ".terraform.tfstate"
+      TF_VAR_cluster-name: ${{vars.PROD_BUCKET_NAME}}
       
     steps:
       
