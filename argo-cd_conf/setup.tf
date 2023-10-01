@@ -17,4 +17,3 @@ resource "kubernetes_namespace" "myapp" {
     name = var.namespace_myapp
   }
 }
-# helm install argocd -n argocd -f values/argo-cd.yaml\
