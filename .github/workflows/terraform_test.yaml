@@ -126,10 +126,8 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-    # - name : checking workspace
-    #   run: |
-    #     terraform workspace new production
-    #     terraform workspace list
+    - name: Copy Staging State File
+      run: aws s3 cp s3://your-bucket-name/env/staging/terraform.tfstate ./env/production/
       
     - name: Terraform Init
       id: init
