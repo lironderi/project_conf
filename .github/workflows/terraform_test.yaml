@@ -134,7 +134,7 @@ jobs:
       
     - name: Terraform Init
       id: init
-      run: terraform init -reconfigure
+      run: terraform init -migrate-state
             
     # # - name: pull state
     # #   run: |
