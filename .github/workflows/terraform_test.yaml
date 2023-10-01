@@ -127,14 +127,14 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-    - name : checking workspace
-      run: |
-        terraform workspace new production
-        terraform workspace list
+    # - name : checking workspace
+    #   run: |
+    #     terraform workspace new production
+    #     terraform workspace list
       
-    # - name: Terraform Init
-    #   id: init
-    #   run: terraform init
+    - name: Terraform Init
+      id: init
+      run: terraform init -reconfigure
             
     # # - name: pull state
     # #   run: |
