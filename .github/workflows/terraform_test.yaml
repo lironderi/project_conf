@@ -117,33 +117,30 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
     
-     
-
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.3.0
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-    - name: Copy Staging State File
-      run: aws s3 cp s3://${{vars.PROD_BUCKET_NAME}}/env:/staging/terraform.tfstate .
       
     - name: Terraform Init
       id: init
-      run: terraform init -migrate-state
+      run: terraform init
             
     # # - name: pull state
     # #   run: |
     # #     aws s3 cp s3://${{vars.PROD_BUCKET_NAME}}/terraform.tfstate .
       
-    # - name: Terraform Apply
-    #   id: apply
-    #   run: |
-    #     for i in {1..5}
-    #     do
-    #       terraform apply -auto-approve && break || sleep 10
-    #     done
+    - name: Terraform Apply
+      id: apply
+      env:
+        TF_WORKSPACE: production
+      run: |
+        for i in {1..5}
+        do
+          terraform apply -auto-approve && break || sleep 10
+        done
 
    
 
