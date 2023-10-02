@@ -167,17 +167,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # - name: Check if Argo CD is installed
-      #   id: check_argo
-      #   run: |
-      #     EXISTS=$(aws s3 ls s3://${{vars.BUCKET_NAME}}/argo-cd.tfstate --region us-east-1 || true)
-      #     if [[ -z "$EXISTS" ]]; then
-      #       echo "::set-output name=exists::false"
-      #     else
-      #       echo "::set-output name=exists::true"
-      #     fi
-
-
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v2
         with:
@@ -201,14 +190,7 @@ jobs:
               do
                 terraform apply -auto-approve && break || sleep 1
               done
-    
-      - name: rename state
-        id: rename
-        run: mv ./terraform.tfstate.d/production/terraform.tfstate ./terraform.tfstate.d/production/argo-cd.tfstate
-      
-      - name: Copy Argo CD State File to S3 Bucket
-        run: |
-          aws s3 cp ./terraform.tfstate.d/production/argo-cd.tfstate s3://${{vars.BUCKET_NAME}}/argo-cd.tfstate
+  
       
 
         
@@ -235,16 +217,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      # - name: Check if monitoring is installed
-      #   id: check_monitoring
-      #   run: |
-      #     EXISTS=$(aws s3 ls s3://${{vars.BUCKET_NAME}}/monitoring.tfstate --region us-east-1 || true)
-      #     if [[ -z "$EXISTS" ]]; then
-      #       echo "::set-output name=exists::false"
-      #     else
-      #       echo "::set-output name=exists::true"
-      #     fi
+      
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v2
         with:
@@ -268,13 +241,6 @@ jobs:
                 terraform apply -auto-approve && break || sleep 1
               done
           
-      - name: rename state
-        id: rename
-        run: mv ./terraform.tfstate.d/production/terraform.tfstate ./terraform.tfstate.d/production/monitoring.tfstate
-      
-      - name: Copy monitoring State File to S3 Bucket
-        run: |
-          aws s3 cp ./terraform.tfstate.d/production/monitoring.tfstate s3://${{vars.BUCKET_NAME}}/monitoring.tfstate
 
   notify2:
     needs:
