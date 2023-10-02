@@ -71,7 +71,7 @@ spec:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-  type: NodePort
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service

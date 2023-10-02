@@ -30,6 +30,7 @@ jobs:
             
       - name: Wait for Pods to be Ready
         run: |
+          kubectl get all
           namespace=myapp
           retries=10
           while (( retries > 0 )); do
@@ -58,4 +59,4 @@ jobs:
           minikube service market-app-service -n myapp --url
           echo "------------------opening the service------------------"
           curl $(minikube service market-app-service -n myapp --url)
-  
+    
