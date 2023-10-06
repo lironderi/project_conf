@@ -143,62 +143,61 @@ jobs:
    
 
 
-  deploy_argo:
-      # needs: production
-      name: Deploy argo
-      # continue-on-error: true
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: "argo-cd_conf"
-      steps:
+  # deploy_argo:
+  #     # needs: production
+  #     name: Deploy argo
+     
+  #     runs-on: ubuntu-latest
+  #     defaults:
+  #       run:
+  #         working-directory: "argo-cd_conf"
+  #     steps:
 
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@v3
 
-      - name: setup AWS
-        uses: aws-actions/setup-sam@v2
-        with:
-          use-installer: true
-      - name : configure AWS
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+  #     - name: setup AWS
+  #       uses: aws-actions/setup-sam@v2
+  #       with:
+  #         use-installer: true
+  #     - name : configure AWS
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-east-1
 
-      - name: Terraform Setup
-        uses: hashicorp/setup-terraform@v2
-        with:
-            terraform_version: 1.3.0
-        env:
-            GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  #     - name: Terraform Setup
+  #       uses: hashicorp/setup-terraform@v2
+  #       with:
+  #           terraform_version: 1.3.0
+  #       env:
+  #           GH_TOKEN: ${{ secrets.GH_TOKEN }}
                 
-      - name: Terraform Init
-        id: init
-        run: terraform init
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init
     
       
-      - name: Terraform Apply
-        id: apply
-        env:
-          TF_WORKSPACE: production
-          TF_VAR_bucket_name: ${{vars.BUCKET_NAME}}
-          TF_VAR_cluster-name: ${{vars.PROD_CLUSTER_NAME}}
-        run: |
-              for i in {1..5}
-              do
-                terraform apply -auto-approve && break || sleep 1
-              done
+  #     - name: Terraform Apply
+  #       id: apply
+  #       env:
+  #         TF_WORKSPACE: production
+  #         TF_VAR_bucket_name: ${{vars.BUCKET_NAME}}
+  #         TF_VAR_cluster-name: ${{vars.PROD_CLUSTER_NAME}}
+  #       run: |
+  #             for i in {1..5}
+  #             do
+  #               terraform apply -auto-approve && break || sleep 1
+  #             done
   
       
 
         
   monitoring:
-      needs: deploy_argo
+      # needs: deploy_argo
       if: ${{ success() }}
       name: monitoring
-      continue-on-error: true
       runs-on: ubuntu-latest
       defaults:
         run:
