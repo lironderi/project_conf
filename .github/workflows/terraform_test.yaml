@@ -245,7 +245,7 @@ jobs:
   notify2:
     needs:
       # - production
-      - deploy_argo
+      # - deploy_argo
       - monitoring
     if: ${{ failure() }}
     runs-on: ubuntu-latest
