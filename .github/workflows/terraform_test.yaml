@@ -146,7 +146,7 @@ jobs:
   deploy_argo:
       needs: production
       name: Deploy argo
-      continue-on-error: true
+      # continue-on-error: true
       runs-on: ubuntu-latest
       defaults:
         run:
@@ -196,6 +196,7 @@ jobs:
         
   monitoring:
       needs: deploy_argo
+      if: ${{ success() }}
       name: monitoring
       continue-on-error: true
       runs-on: ubuntu-latest
