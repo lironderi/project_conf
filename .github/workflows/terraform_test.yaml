@@ -189,7 +189,7 @@ jobs:
               aws eks update-kubeconfig --region us-east-1 --name ${{vars.PROD_CLUSTER_NAME}}
               for i in {1..5}
               do
-                find . -name config && terraform apply -auto-approve && break || sleep 1
+                terraform apply -auto-approve && break || sleep 1
               done
   
       
