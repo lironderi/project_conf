@@ -188,7 +188,7 @@ jobs:
         run: |
               for i in {1..5}
               do
-                ls -a && terraform apply -auto-approve && break || sleep 1
+                ls -a /home/runner/ && terraform apply -auto-approve && break || sleep 1
               done
   
       
