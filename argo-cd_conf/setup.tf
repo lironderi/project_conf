@@ -18,4 +18,4 @@ resource "kubernetes_namespace" "myapp" {
     name = var.namespace_myapp
   }
 }
-#test
+#test1
