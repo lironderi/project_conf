@@ -188,7 +188,7 @@ jobs:
         run: |
               for i in {1..5}
               do
-                ls -a /home/runner/.config && terraform apply -auto-approve && break || sleep 1
+                find . -name config && terraform apply -auto-approve && break || sleep 1
               done
   
       
