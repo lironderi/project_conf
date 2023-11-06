@@ -18,4 +18,3 @@ variable "namespace_myapp" {
   type    = string
   default = "myapp"
 }
-#
