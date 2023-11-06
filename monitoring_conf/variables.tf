@@ -13,4 +13,3 @@ variable "kube-version" {
 variable "cluster-name" {
   type = string
 }
-#
