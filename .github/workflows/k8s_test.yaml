@@ -1,62 +1,62 @@
-name: k8s_test
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - k8s_conf/deployment.yaml
-      - k8s_test/**
+# name: k8s_test
+# on:
+#   push:
+#     branches:
+#       - master
+#     paths:
+#       - k8s_conf/deployment.yaml
+#       - k8s_test/**
 
-jobs:
-  job1:
-    runs-on: ubuntu-latest
-    name: build example and deploy to minikube
-    steps:
-      - uses: actions/checkout@v2
-      - name: Start minikube
-        uses: medyagh/setup-minikube@master
-      - name: Try the cluster !
-        run: kubectl get pods -A
-      - name: Create Namespace
-        run: kubectl create namespace myapp       
-      - name: Deploy to minikube
-        run: |
-          cd k8s_test
-          kubectl apply -f mongo_pv_test.yaml 
-          kubectl apply -f mongo_pvc_test.yaml 
-          kubectl apply -f mongodb_storageclass_test.yaml
-          cd ../k8s_conf
-          kubectl apply -f deployment.yaml
+# jobs:
+#   job1:
+#     runs-on: ubuntu-latest
+#     name: build example and deploy to minikube
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Start minikube
+#         uses: medyagh/setup-minikube@master
+#       - name: Try the cluster !
+#         run: kubectl get pods -A
+#       - name: Create Namespace
+#         run: kubectl create namespace myapp       
+#       - name: Deploy to minikube
+#         run: |
+#           cd k8s_test
+#           kubectl apply -f mongo_pv_test.yaml 
+#           kubectl apply -f mongo_pvc_test.yaml 
+#           kubectl apply -f mongodb_storageclass_test.yaml
+#           cd ../k8s_conf
+#           kubectl apply -f deployment.yaml
             
-      - name: Wait for Pods to be Ready
-        run: |
-          kubectl get all
-          namespace=myapp
-          retries=10
-          while (( retries > 0 )); do
-            ready_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}' | tr ' ' '\n' | grep "True" | wc -l)
-            total_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].metadata.name}' | tr ' ' '\n' | wc -l)
+#       - name: Wait for Pods to be Ready
+#         run: |
+#           kubectl get all
+#           namespace=myapp
+#           retries=10
+#           while (( retries > 0 )); do
+#             ready_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}' | tr ' ' '\n' | grep "True" | wc -l)
+#             total_pods=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].metadata.name}' | tr ' ' '\n' | wc -l)
             
-            if (( ready_pods == total_pods )); then
-              echo "All pods are ready."
-              break
-             else
-              echo "Waiting for pods to be ready..."
-              sleep 10
-              (( retries-- ))
-            fi
-           done
+#             if (( ready_pods == total_pods )); then
+#               echo "All pods are ready."
+#               break
+#              else
+#               echo "Waiting for pods to be ready..."
+#               sleep 10
+#               (( retries-- ))
+#             fi
+#            done
             
-           if (( retries == 0 )); then
-              echo "Not all pods became ready in time."
-              exit 1
-           fi
+#            if (( retries == 0 )); then
+#               echo "Not all pods became ready in time."
+#               exit 1
+#            fi
         
         
-      - name: Test service URLs
-        run: |
-          minikube service list
-          minikube service market-app-service -n myapp --url
-          echo "------------------opening the service------------------"
-          curl $(minikube service market-app-service -n myapp --url)
+#       - name: Test service URLs
+#         run: |
+#           minikube service list
+#           minikube service market-app-service -n myapp --url
+#           echo "------------------opening the service------------------"
+#           curl $(minikube service market-app-service -n myapp --url)
     
