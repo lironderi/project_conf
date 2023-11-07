@@ -3,7 +3,7 @@ name: Scheduled check
 on:
   schedule:
     # Runs at 22:05 Israel Time (UTC+2)
-    - cron: '13 20 * * *'
+    - cron: '* * * * *'
 
 jobs:
   run-checks:
