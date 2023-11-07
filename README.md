@@ -67,7 +67,7 @@ Prometheus and Grafana are both used for monitoring the cluster and the App.
 
 ## *Project Repos*
 - [infrastructure](https://github.com/danielsagie/project_conf)
-- [Web-App](https://github.com/lironderi/project_app)
+- [Web-App](https://github.com/danielsagie/project_app)
 
 ## *Providers*
 - *Kubernetes*: This provider is used to interact with Kubernetes clusters.
