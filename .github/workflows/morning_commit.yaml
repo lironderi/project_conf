@@ -3,12 +3,14 @@ name: Scheduled check
 on:
   schedule:
     # Runs at 22:05 Israel Time (UTC+2)
-    - cron:  '09 20 * * *'
+    - cron: '13 20 * * *'
 
 jobs:
   run-checks:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Run checks
         run: |
           echo "Running scheduled checks..."
