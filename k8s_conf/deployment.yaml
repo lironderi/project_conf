@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: market-app
-        image: lironderi/market-app:v1.0.6431893504
+        image: lironderi/market-app:v1.0.6790907000
         imagePullPolicy: Always
         resources:
           limits:
