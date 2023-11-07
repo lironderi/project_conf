@@ -66,7 +66,7 @@ Prometheus and Grafana are both used for monitoring the cluster and the App.
 
 
 ## *Project Repos*
-- [infrastructure](https://github.com/lironderi/project_conf)
+- [infrastructure](https://github.com/danielsagie/project_conf)
 - [Web-App](https://github.com/lironderi/project_app)
 
 ## *Providers*
