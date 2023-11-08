@@ -7,9 +7,9 @@ on:
     - eks_conf/**
     - argo-cd_conf/**
     - monitoring_conf/**
-  schedule:
-    # Runs at 7AM Israel Standard Time (UTC+2)
-    - cron: '0 5 * * *'
+  # schedule:
+  #   # Runs at 7AM Israel Standard Time (UTC+2)
+  #   - cron: '0 5 * * *'
 
 env:      
     AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
