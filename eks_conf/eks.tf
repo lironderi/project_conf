@@ -63,4 +63,3 @@ resource "null_resource" "kubectl" {
 }
 
 
-#test2
